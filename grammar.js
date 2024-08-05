@@ -2293,6 +2293,7 @@ module.exports = grammar({
       choice(
         $._insert_values,
         $._set_values,
+        $.execute_procedure
       ),
       optional(
         seq(
