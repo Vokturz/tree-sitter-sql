@@ -2177,11 +2177,11 @@ module.exports = grammar({
     object_reference: $ => seq(
       optional(
         seq(
-          field('schema', $.identifier),
+          optional_brackets(field('schema', $.identifier)),
           '.',
         ),
       ),
-      field('name', $.identifier),
+      optional_brackets(field('name', $.identifier)),
     ),
 
     _copy_statement: $ => seq(
@@ -3525,6 +3525,15 @@ function optional_parenthesis(node) {
     choice(
       node,
       wrapped_in_parenthesis(node),
+    ),
+  )
+}
+
+function optional_brackets(node) {
+  return prec.right(
+    choice(
+      node,
+      seq("[", node, "]")
     ),
   )
 }
