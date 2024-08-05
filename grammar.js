@@ -701,6 +701,7 @@ module.exports = grammar({
         ),
       ),
       $.keyword_end,
+      choice(';', $.keyword_go)
     ),
 
     statement: $ => seq(
@@ -1161,8 +1162,7 @@ module.exports = grammar({
       $.object_reference,
       $.function_arguments,
       $.keyword_as,
-      $.procedure_body,
-      choice(';', $.keyword_go)
+      $.procedure_body
     ),
 
     procedure_body: $ => choice(
