@@ -329,6 +329,8 @@ module.exports = grammar({
     keyword_referencing: _ => make_keyword("referencing"),
     keyword_statement: _ => make_keyword("statement"),
     keyword_execute: _ => make_keyword("execute"),
+    keyword_exec: _ => make_keyword("exec"),
+    keyword_go: _ => make_keyword("go"),
     keyword_procedure: _ => make_keyword("procedure"),
 
     // Hive Keywords
@@ -698,6 +700,7 @@ module.exports = grammar({
       choice(
         $._ddl_statement,
         $._dml_write,
+        $.execute_procedure,
         optional_parenthesis($._dml_read),
       ),
     ),
@@ -814,6 +817,7 @@ module.exports = grammar({
 
     function_argument: $ => seq(
       optional($._argmode),
+      optional("@"),
       optional($.identifier),
       $._type,
       optional(
@@ -935,6 +939,7 @@ module.exports = grammar({
         $.create_materialized_view,
         $.create_index,
         $.create_function,
+        $.create_procedure,
         $.create_type,
         $.create_database,
         $.create_role,
@@ -987,6 +992,7 @@ module.exports = grammar({
         ),
         $.keyword_table,
         optional($._if_not_exists),
+        optional("#"), // MySQL temp case
         $.object_reference,
         choice(
           seq(
@@ -1127,6 +1133,27 @@ module.exports = grammar({
     // the start tag match the end one. The usage of this syntax in other
     // context is done by _dollar_string.
     dollar_quote: () => /\$[^\$]*\$/,
+
+    create_procedure: $ => seq(
+      $.keyword_create,
+      optional($._or_replace),
+      $.keyword_procedure,
+      $.object_reference,
+      $.function_arguments,
+      $.keyword_as,
+      $.procedure_body
+    ),
+
+    procedure_body: $ => choice(
+      $.statement,
+      $.block
+    ),
+
+    execute_procedure: $ => seq(
+      choice($.keyword_exec, $.keyword_execute),
+      $.object_reference,
+      optional(field('parameters', repeat(seq(optional("@"), $.identifier)))),
+    ),
 
     create_function: $ => seq(
       $.keyword_create,
