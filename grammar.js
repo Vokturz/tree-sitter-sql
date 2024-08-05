@@ -21,6 +21,17 @@ module.exports = grammar({
     [$.between_expression, $.binary_expression],
     [$.time],
     [$.timestamp],
+    [$._vacuum_table],
+    [$.transaction, $.block],
+    [$.create_role],
+    [$.create_type],
+    [$.create_database],
+    [$.create_extension],
+    [$.alter_role],
+    [$.drop_database],
+    [$._compute_stats],
+    [$.column_definition],
+    [$.when_clause]
   ],
 
   precedences: $ => [
@@ -685,7 +696,7 @@ module.exports = grammar({
       repeat(
         seq(
           $.statement,
-          choice(';', $.keyword_go)
+          optional(choice(';', $.keyword_go))
         ),
       ),
       $.keyword_end,
