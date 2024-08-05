@@ -31,7 +31,8 @@ module.exports = grammar({
     [$.drop_database],
     [$._compute_stats],
     [$.column_definition],
-    [$.when_clause]
+    [$.when_clause],
+    [$.function_declaration, $.declare_statement],
   ],
 
   precedences: $ => [
@@ -726,6 +727,7 @@ module.exports = grammar({
       $.comment_statement,
       $.set_statement,
       $.reset_statement,
+      $.declare_statement
     ),
 
     _cte: $ => seq(
@@ -1052,6 +1054,13 @@ module.exports = grammar({
       ),
       optional($.keyword_not),
       $.keyword_deferrable,
+    ),
+
+    declare_statement: $ => seq(
+      $.keyword_declare,
+      optional('@'),
+      $.identifier,
+      $._type
     ),
 
     set_statement: $ => seq(
