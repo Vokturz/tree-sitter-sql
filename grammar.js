@@ -54,7 +54,7 @@ module.exports = grammar({
             $.statement,
             $.block,
           ),
-          ';',
+          choice(';', $.keyword_go),
         ),
       ),
       // optionally, a single statement without a terminating ;
@@ -652,11 +652,11 @@ module.exports = grammar({
       optional(
         $.keyword_transaction,
       ),
-      optional(';'),
+      optional(choice(';', $.keyword_go)),
       repeat(
         seq(
           $.statement,
-          ';'
+          choice(';', $.keyword_go)
         ),
       ),
       choice(
@@ -681,11 +681,11 @@ module.exports = grammar({
 
     block: $ => seq(
       $.keyword_begin,
-      optional(';'),
+      optional(choice(';', $.keyword_go)),
       repeat(
         seq(
           $.statement,
-          ';'
+          choice(';', $.keyword_go)
         ),
       ),
       $.keyword_end,
@@ -1218,7 +1218,7 @@ module.exports = grammar({
           ),
         ),
       ),
-      ';',
+      choice(';', $.keyword_go),
     ),
 
     _function_body_statement: $ => choice(
@@ -1229,7 +1229,7 @@ module.exports = grammar({
     function_body: $ => choice(
       seq(
         $._function_return,
-        ';'
+        choice(';', $.keyword_go)
       ),
       seq(
         $.keyword_begin,
@@ -1237,7 +1237,7 @@ module.exports = grammar({
         repeat1(
           seq(
             $._function_body_statement,
-            ';',
+            choice(';', $.keyword_go),
           ),
         ),
         $.keyword_end,
@@ -1257,11 +1257,11 @@ module.exports = grammar({
         repeat1(
           seq(
             $._function_body_statement,
-            ';',
+            choice(';', $.keyword_go),
           ),
         ),
         $.keyword_end,
-        optional(';'),
+        optional(choice(';', $.keyword_go)),
         alias($._dollar_quoted_string_end_tag, $.dollar_quote),
       ),
       seq(
@@ -1278,7 +1278,7 @@ module.exports = grammar({
         $.keyword_as,
         alias($._dollar_quoted_string_start_tag, $.dollar_quote),
         $._function_body_statement,
-        optional(';'),
+        optional(choice(';', $.keyword_go)),
         alias($._dollar_quoted_string_end_tag, $.dollar_quote),
       ),
     ),
