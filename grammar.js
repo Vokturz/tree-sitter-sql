@@ -2847,15 +2847,16 @@ module.exports = grammar({
         // standard CASE WHEN x, where x must be a predicate
         seq(
           $.keyword_when,
-          $._expression,
+          // IDK WHY THIS WORKS, BUT IT DOES
+          choice($.object_reference, $._expression),
           $.keyword_then,
-          $._expression,
+          choice($.object_reference, $._expression),
           repeat(
             seq(
               $.keyword_when,
-              $._expression,
+              choice($.object_reference, $._expression),
               $.keyword_then,
-              $._expression,
+              choice($.object_reference, $._expression),
             )
           ),
         ),
