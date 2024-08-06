@@ -17,7 +17,6 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.object_reference, $._qualified_field],
-    [$.object_reference],
     [$.between_expression, $.binary_expression],
     [$.time],
     [$.timestamp],
@@ -3217,7 +3216,9 @@ module.exports = grammar({
     group_by: $ => seq(
       $.keyword_group,
       $.keyword_by,
-      comma_list($._expression, true),
+      // temporary fix! this should be an expression instead
+      // however, this work for our purpose
+      comma_list($.object_reference, true),
       optional($._having),
     ),
 
