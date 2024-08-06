@@ -20,7 +20,6 @@ module.exports = grammar({
     [$.between_expression, $.binary_expression],
     [$.time],
     [$.timestamp],
-    [$._vacuum_table],
     [$.transaction, $.block],
     [$.function_declaration, $.declare_statement],
   ],
@@ -686,8 +685,8 @@ module.exports = grammar({
       optional(choice(';', $.keyword_go)),
       repeat(
         seq(
-          $.statement,
-          optional(choice(';', $.keyword_go))
+          choice($.statement, $.block),
+          choice(';', $.keyword_go)
         ),
       ),
       $.keyword_end,
@@ -718,7 +717,8 @@ module.exports = grammar({
       $.comment_statement,
       $.set_statement,
       $.reset_statement,
-      $.declare_statement
+      $.declare_statement,
+      $.if_statement
     ),
 
     _cte: $ => seq(
@@ -1164,6 +1164,18 @@ module.exports = grammar({
       choice($.keyword_exec, $.keyword_execute),
       $.object_reference,
       optional(field('parameters', repeat(seq(optional("@"), $.identifier)))),
+    ),
+    
+    if_statement: $ => seq(
+      $.keyword_if,
+      optional_parenthesis($._expression), // condition
+      choice($.statement, $.block),
+      // repeat(
+      //   seq($.keyword_elseif, optional_parenthesis($._expression))
+      // ),
+      // optional(
+      //   seq( $.keyword_else, choice($.statement, $.block))
+      // )
     ),
 
     create_function: $ => seq(
