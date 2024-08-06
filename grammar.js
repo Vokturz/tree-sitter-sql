@@ -680,7 +680,7 @@ module.exports = grammar({
       ),
     ),
 
-    block: $ => seq(
+    block: $ => prec.right(seq(
       $.keyword_begin,
       optional(choice(';', $.keyword_go)),
       repeat(
@@ -690,8 +690,8 @@ module.exports = grammar({
         ),
       ),
       $.keyword_end,
-      choice(';', $.keyword_go)
-    ),
+      optional(choice(';', $.keyword_go))
+    )),
 
     statement: $ => seq(
       optional(seq(
