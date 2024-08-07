@@ -272,6 +272,7 @@ module.exports = grammar({
     keyword_function: _ => make_keyword("function"),
     keyword_returns: _ => make_keyword("returns"),
     keyword_return: _ => make_keyword("return"),
+    keyword_query: _ => make_keyword("query"),
     keyword_setof: _ => make_keyword("setof"),
     keyword_atomic: _ => make_keyword("atomic"),
     keyword_declare: _ => make_keyword("declare"),
@@ -1247,6 +1248,11 @@ module.exports = grammar({
     _function_body_statement: $ => choice(
       $.statement,
       $._function_return,
+      seq(
+        $.keyword_return,
+        $.keyword_query,
+        $.statement
+      )
     ),
 
     function_body: $ => choice(
