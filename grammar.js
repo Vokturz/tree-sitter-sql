@@ -22,6 +22,7 @@ module.exports = grammar({
     [$.timestamp],
     [$.transaction, $.block],
     [$.function_declaration, $.declare_statement],
+    [$.add_constraint, $._column]
   ],
 
   precedences: $ => [
@@ -1459,7 +1460,7 @@ module.exports = grammar({
     )),
 
     _with_settings: $ => seq(
-          field('name', $.identifier),
+          optional_brackets(field('name', $.identifier)),
           optional('='),
           field('value', choice($.identifier, alias($._single_quote_string, $.literal))),
     ),
@@ -1754,7 +1755,7 @@ module.exports = grammar({
     add_constraint: $ => seq(
       $.keyword_add,
       optional($.keyword_constraint),
-      $.identifier,
+      optional_brackets($.identifier),
       $.constraint,
     ),
 
@@ -1764,7 +1765,7 @@ module.exports = grammar({
       optional(
         $.keyword_column,
       ),
-      field('name', $.identifier),
+      optional_brackets(field('name', $.identifier)),
       choice(
         seq(
           choice(
@@ -1856,7 +1857,7 @@ module.exports = grammar({
         $.keyword_column,
       ),
       optional($._if_exists),
-      field('name', $.identifier),
+      optional_brackets(field('name', $.identifier)),
     ),
 
     rename_column: $ => seq(
@@ -2667,8 +2668,8 @@ module.exports = grammar({
     ),
 
     column_definition: $ => prec.left(seq(
-      field('name', $._column),
-      field('type', $._type),
+      optional_brackets(field('name', $._column)),
+      optional_brackets(field('type', $._type)),
       repeat($._column_constraint),
     )),
 
@@ -2765,7 +2766,7 @@ module.exports = grammar({
 
     _constraint_literal: $ => seq(
       $.keyword_constraint,
-      field('name', $.identifier),
+      optional_brackets(field('name', $.identifier)),
       choice(
         seq(
           $._primary_key,
@@ -2797,7 +2798,7 @@ module.exports = grammar({
         seq(optional($.keyword_foreign), $.keyword_key, optional($._if_not_exists)),
         $.keyword_index,
       ),
-      optional(field('name', $.identifier)),
+      optional(optional_brackets(field('name', $.identifier))),
       $.ordered_columns,
       optional(
         seq(
@@ -2827,7 +2828,7 @@ module.exports = grammar({
     ordered_columns: $ => paren_list(alias($.ordered_column, $.column), true),
 
     ordered_column: $ => seq(
-      field('name', $._column),
+      optional_brackets(field('name', $._column)),
       optional($.direction),
     ),
 
@@ -2888,7 +2889,7 @@ module.exports = grammar({
       $.keyword_end,
     ),
 
-    field: $ => field('name', $.identifier),
+    field: $ => optional_brackets(field('name', $.identifier)),
 
     _qualified_field: $ => seq(
       optional(
@@ -2897,7 +2898,7 @@ module.exports = grammar({
           '.',
         ),
       ),
-      field('name', $.identifier),
+      optional_brackets(field('name', $.identifier)),
     ),
 
     implicit_cast: $ => seq(
