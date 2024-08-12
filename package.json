@@ -72,16 +72,5 @@
     "skip": {
       "tag": true
     }
-  },
-  "pkg": {
-    "scripts": "build/**/*.js",
-    "assets": [
-      "node_modules/@derekstride/tree-sitter-sql-fork/**/*"
-    ],
-    "targets": [
-      "node20-linux-x64"
-    ],
-    "outputPath": "dist"
-}
-
+  }
 }
