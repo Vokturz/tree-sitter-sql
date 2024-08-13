@@ -2812,7 +2812,7 @@ module.exports = grammar({
         seq(
           $.keyword_references,
           $.object_reference,
-          paren_list($.identifier, true),
+          paren_list(optional_brackets($.identifier), true),
           repeat(
             seq(
               $.keyword_on,
