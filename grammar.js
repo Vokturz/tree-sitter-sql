@@ -965,6 +965,7 @@ module.exports = grammar({
       $.storage_location,
       $.table_sort,
       $.row_format,
+      seq($.keyword_on, optional_brackets($.keyword_primary)),
       seq(
         $.keyword_tblproperties,
         paren_list($.table_option, true),
