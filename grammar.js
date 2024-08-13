@@ -1714,6 +1714,7 @@ module.exports = grammar({
       optional($._if_exists),
       optional($.keyword_only),
       $.object_reference,
+      optional(seq($.keyword_with, $.keyword_check)),
       choice(
         seq(
           $._alter_specifications,
@@ -2761,7 +2762,8 @@ module.exports = grammar({
       $._constraint_literal,
       $._key_constraint,
       $._primary_key_constraint,
-      $._check_constraint
+      $._check_constraint,
+      $._default_constraint
     ),
 
     _constraint_literal: $ => seq(
@@ -2781,6 +2783,11 @@ module.exports = grammar({
     _primary_key_constraint: $ => seq(
       $._primary_key,
       $.ordered_columns,
+    ),
+
+    _default_constraint: $ => seq(
+      $.keyword_default,
+      $._expression,
     ),
 
     _key_constraint: $ => seq(
