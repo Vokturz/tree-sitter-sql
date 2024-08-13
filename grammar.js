@@ -2671,7 +2671,7 @@ module.exports = grammar({
 
     column_definition: $ => prec.left(seq(
       optional_brackets(field('name', $._column)),
-      optional_brackets(field('type', $._type)),
+      field('type', $._type),
       repeat($._column_constraint),
     )),
 
@@ -3590,9 +3590,11 @@ function wrapped_in_parenthesis(node) {
 function parametric_type($, type, params = ['size']) {
   return prec.right(1,
     choice(
+      // optional_brackets(type),
       type,
+      seq("[", type, "]"),
       seq(
-        type,
+        choice(type, seq("[", type, "]")),
         wrapped_in_parenthesis(
           seq(
             // first parameter is guaranteed, shift it out of the array
