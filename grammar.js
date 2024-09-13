@@ -1081,6 +1081,8 @@ module.exports = grammar({
             seq($.keyword_role, choice($.identifier, $.keyword_none)),
           ),
         ),
+        seq($.object_reference, $.keyword_on),
+        seq($.object_reference, $.keyword_off),
         seq($.keyword_constraints, choice($.keyword_all, comma_list($.identifier, true)), choice($.keyword_deferred, $.keyword_immediate)),
         seq($.keyword_transaction, $._transaction_mode),
         seq($.keyword_transaction, $.keyword_snapshot, $._transaction_mode),
